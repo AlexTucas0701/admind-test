@@ -50,7 +50,7 @@
 
 ## Result
 - Here are demo
-- IMAGE
-  ![IMAGE](./demo/demo.png)
-- VIDEO
-  - [Watch Demo](./demo/demo-admind.mp4)
+  - IMAGE
+    ![IMAGE](./demo/demo.png)
+  - VIDEO
+    - [Watch Demo](./demo/demo-admind.mp4)
