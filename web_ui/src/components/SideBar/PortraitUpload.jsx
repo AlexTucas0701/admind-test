@@ -4,22 +4,26 @@ import {
   ButtonGroup,
   IconButton,
   ImageList,
+  CircularProgress,
 } from "@mui/material";
 import {
   CheckOutlined,
   CloudUploadOutlined,
   DeleteOutlined,
+  DownloadOutlined,
   PlayArrowOutlined,
 } from "@mui/icons-material";
 import ImageBar from "../Common/ImageBar";
 import {clearPortrait, merge, removeBackgroundStream} from "../../redux/portraitSlice";
 import {useDispatch, useSelector} from "react-redux";
+import APIS from "../../constants/api";
 
 const PortraitUpload = () => {
   const [image, setImage] = useState(null);
   const [imageFile, setImageFile] = useState(null);
+  const [downloading, setDownloading] = useState(false);
   const dispatch = useDispatch();
-  const {bg_removed_portrait}= useSelector(state => state.portrait);
+  const {bg_removed_portrait, merged_portrait}= useSelector(state => state.portrait);
   const {background}= useSelector(state => state.background);
 
   const handleImageUpload = (event) => {
@@ -45,6 +49,19 @@ const PortraitUpload = () => {
 
   const handleMerge = () => {
     dispatch(merge(background.key));
+  };
+
+  const handleDownload = async () => {
+    setDownloading(true);
+    const response = await fetch(APIS.MERGED_PORTRAIT);
+    const blob = await response.blob();
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "new-portrait.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setDownloading(false);
   };
 
   return (
@@ -90,6 +107,13 @@ const PortraitUpload = () => {
           </IconButton>
           <IconButton onClick={handleMerge} disabled={!(background.link && bg_removed_portrait)}>
             <CheckOutlined />
+          </IconButton>
+          <IconButton onClick={handleDownload} disabled={!(merged_portrait && !downloading)}>
+            {
+              downloading
+                ? <CircularProgress size={"24px"} />
+                : <DownloadOutlined />
+            }
           </IconButton>
         </ButtonGroup>
       </ImageList>
