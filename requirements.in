@@ -1,0 +1,5 @@
+fastapi[standard]
+PySide6
+onnxruntime
+pillow
+rembg
